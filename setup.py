@@ -20,7 +20,7 @@ from distutils.core import setup
 
 setup (name = 'GooMPy',
     version = '0.1',
-    install_requires = ['PIL'],
+    install_requires = ['Pillow'],
     description = 'Google Maps for Python',
     packages = ['goompy',],
     author='Alec Singer and Simon D. Levy',

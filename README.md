@@ -11,3 +11,10 @@ Because Google limits the number of tiles that you can download during a given t
   
 Once you have your key, put it in the file goompy/key.py, and GooMPy will use it in fetching map tiles.  If you run out of downloads, the tiles will be black with a "capacity exceeded" image in them.
 
+## QT ##
+
+The QT Version of GooMPy has the following dependencies:
+
+* Python 3.x (3.5 tested)
+* PIL or Pillow
+* PyQt5

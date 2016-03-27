@@ -16,9 +16,9 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import math
-import PIL.Image
-import cStringIO
-import urllib
+import PIL.Image, PIL.ImageQt
+import io
+from urllib import request, response
 import os
 import time
 
@@ -29,7 +29,7 @@ except:
 
 _EARTHPIX = 268435456  # Number of pixels in half the earth's circumference at zoom = 21
 _DEGREE_PRECISION = 4  # Number of decimal places for rounding coordinates
-_TILESIZE = 640        # Larget tile we can grab without paying
+_TILESIZE = 640        # Largest tile we can grab without paying
 _GRABRATE = 4          # Fastest rate at which we can download tiles without paying
 
 _pixrad = _EARTHPIX / math.pi
@@ -62,8 +62,8 @@ def _grab_tile(lat, lon, zoom, maptype, _TILESIZE, sleeptime):
     else:
         url = urlbase % specs
 
-        result = urllib.urlopen(url).read()
-        tile = PIL.Image.open(cStringIO.StringIO(result))
+        result = request.urlopen(url)
+        tile = PIL.Image.open(io.BytesIO(result.read()))
         if not os.path.exists('mapscache'):
             os.mkdir('mapscache')
         tile.save(filename)
@@ -151,12 +151,20 @@ class GooMPy(object):
 
         self._update()
 
-    def getImage(self):
+    def getImage(self) -> PIL.Image:
         '''
         Returns the current image as a PIL.Image object.
         '''
 
         return self.winimage
+
+    def getImageQt(self) -> PIL.ImageQt:
+        '''
+        Returns the current image as a PIL.ImageQt object.
+        :return:
+        '''
+        qimage = PIL.ImageQt.ImageQt(self.winimage)
+        return qimage
 
     def move(self, dx, dy):
         '''
@@ -196,7 +204,7 @@ class GooMPy(object):
 
     def _update(self):
 
-        self.winimage.paste(self.bigimage, (-self.leftx, -self.uppery))
+        self.winimage.paste(self.bigimage, (int(-self.leftx), int(-self.uppery)))
 
     def _constrain(self, oldval, diff, dimsize):
 
